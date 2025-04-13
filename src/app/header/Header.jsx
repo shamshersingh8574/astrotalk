@@ -6,7 +6,7 @@ import AstroNotification from "../component/AstroNotification";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import UserOtpLoginData from "../component/UserOtpLoginData";
+// import UserOtpLoginData from "../component/UserOtpLoginData";
 
 const Header = () => {
   const router = useRouter();
@@ -18,15 +18,15 @@ const Header = () => {
 
   const [userMobile, setUserMobile] = useState(null);
 
-  // const [astrologerPhone, setAstrologerPhone] = useState();
+  const [astrologerPhone, setAstrologerPhone] = useState();
 
   //   const  process.env.NEXT_PUBLIC_WEBSITE_URL  = useContext(UserContext);
   // console.log(process.env.NEXT_PUBLIC_WEBSITE_URL);
   
-  const astrologerPhone = localStorage.getItem("astrologer-phone");
-    // useEffect(() => {
-    //   setAstrologerPhone(astrologerPhone);
-    // }, []);
+  useEffect(() => {
+      const astrologerPhone = localStorage.getItem("astrologer-phone");
+      setAstrologerPhone(astrologerPhone);
+    }, []);
   useEffect(() => {
     const fetchUserMobile = () => {
       const storedUserMob = localStorage.getItem("userMobile");
@@ -110,11 +110,11 @@ const Header = () => {
   };
   return (
     <header className="wedding-header">
-      <div className={otpPopUpDisplay == true && `outer-send-otp-main`}>
+      {/* <div className={otpPopUpDisplay == true && `outer-send-otp-main`}>
         {otpPopUpDisplay && (
           <UserOtpLoginData setOtpPopUpDisplay={setOtpPopUpDisplay} />
         )}
-      </div>
+      </div> */}
       <div className="container">
         <div className="inner-header-sec ctm-flex-row ctm-align-items-center ctm-justify-content-between">
           <div className="header-left-logo">
