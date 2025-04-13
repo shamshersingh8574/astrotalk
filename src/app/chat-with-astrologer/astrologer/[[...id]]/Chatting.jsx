@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRef } from "react";
+import secureLocalStorage from "react-secure-storage";
 
 const socket = io(process.env.NEXT_PUBLIC_WEBSITE_URL, {
   transports: ["websocket"],
@@ -12,8 +13,8 @@ const socket = io(process.env.NEXT_PUBLIC_WEBSITE_URL, {
 });
 
 export default function Chatting({ astrologer }) {
-  const astrologerPhone = localStorage.getItem("astrologer-phone");
-  const totalChatTime = Math.round(localStorage.getItem("totalChatTime"));
+  const astrologerPhone = secureLocalStorage.getItem("astrologer-phone");
+  const totalChatTime = Math.round(secureLocalStorage.getItem("totalChatTime"));
   const [actualChargeUserChat, setActualChargeUserChat] = useState();
 
   const timeoutRef = useRef(null);
@@ -23,12 +24,12 @@ export default function Chatting({ astrologer }) {
   const [messageData, setMessageData] = useState([]);
   const [user, setUser] = useState("");
   const [showUserData, setShowUserData] = useState("");
-  const astrologerId = localStorage.getItem("astrologerId");
-  const userIds = localStorage.getItem("userIds");
+  const astrologerId = secureLocalStorage.getItem("astrologerId");
+  const userIds = secureLocalStorage.getItem("userIds");
   const [astrologerNotificationStatus, setAstrologerNotificationStatus] =
     useState();
   useEffect(() => {
-    let storedNotification = localStorage.getItem(
+    let storedNotification = secureLocalStorage.getItem(
       "AstrologerNotificationStatus"
     );
     if (storedNotification) {
@@ -37,8 +38,8 @@ export default function Chatting({ astrologer }) {
   }, []);
 
   const [timeLeft, setTimeLeft] = useState(() => {
-    // Initialize timeLeft from localStorage or set to a default value
-    const storedTime = localStorage.getItem("chatTimeLeft");
+    // Initialize timeLeft from secureLocalStorage or set to a default value
+    const storedTime = secureLocalStorage.getItem("chatTimeLeft");
     return storedTime
       ? parseInt(storedTime, 10)
       : astrologerNotificationStatus == false
@@ -54,7 +55,7 @@ export default function Chatting({ astrologer }) {
     socket.on("astrologer-data-received-new-notification", (data) => {
       console.log("New notification received:", data);
 if(data.astrologerData.mobileNumber==astrologerPhone){
-  localStorage.setItem(
+  secureLocalStorage.setItem(
     "AstrologerNotificationStatus",
     data.astrologerData.chatStatus
   );
@@ -189,9 +190,9 @@ if(data.astrologerData.mobileNumber==astrologerPhone){
           position: "top-right",
         });
 
-        // Update state and localStorage
+        // Update state and secureLocalStorage
         setTimeLeft(null);
-        localStorage.removeItem("chatTimeLeft");
+        secureLocalStorage.removeItem("chatTimeLeft");
 
         const updatedAstrologerData = response.data.updatedProfile;
         socket.emit("astrologer-chat-status", updatedAstrologerData);
@@ -210,8 +211,8 @@ if(data.astrologerData.mobileNumber==astrologerPhone){
         socket.emit("chat-timeLeft-update", newUserDetail);
         console.log(newUserDetail);
 
-        // Update AstrologerNotificationStatus in localStorage and state
-        localStorage.setItem(
+        // Update AstrologerNotificationStatus in secureLocalStorage and state
+        secureLocalStorage.setItem(
           "AstrologerNotificationStatus",
           updatedAstrologerData.chatStatus
         );
@@ -240,8 +241,8 @@ if(data.astrologerData.mobileNumber==astrologerPhone){
         intervalRef.current = setInterval(() => {
           setTimeLeft((prevTime) => {
             const newTime = prevTime + 1;
-            localStorage.setItem("chatTimeLeft", newTime.toString());
-            localStorage.setItem("totalChatTime", newTime.toString());
+            secureLocalStorage.setItem("chatTimeLeft", newTime.toString());
+            secureLocalStorage.setItem("totalChatTime", newTime.toString());
             return newTime;
           });
         }, 1000);
@@ -254,7 +255,7 @@ if(data.astrologerData.mobileNumber==astrologerPhone){
       }, 100);
     } else {
       setTimeLeft(null);
-      localStorage.removeItem("chatTimeLeft");
+      secureLocalStorage.removeItem("chatTimeLeft");
       clearTimeout(timeoutRef.current);
       clearInterval(intervalRef.current);
       const newUserDetail = {

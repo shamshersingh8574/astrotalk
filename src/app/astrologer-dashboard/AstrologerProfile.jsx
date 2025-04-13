@@ -4,35 +4,26 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { validateAstrologerForm } from "../component/FormValidation";
+import secureLocalStorage from "react-secure-storage";
 
 const AstrologerProfile = ({ setSuccessMessageProfile }) => {
+  const astrologerPhone = secureLocalStorage.getItem("astrologer-phone");
   const [registrationDetail, setRegistrationDetail] = useState();
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState();
-  const [astrologerPhone, setAstrologerPhone] = useState();
-
-
-  useEffect(()=>{
-    const astrologerPhone = localStorage.getItem("astrologer-phone");
-    setAstrologerPhone(astrologerPhone)
-  },[])
 
   useEffect(() => {
-    const fetchAstrologerDetail = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-detail/${astrologerPhone}`
-        );
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-detail/${astrologerPhone}`
+      )
+      .then((res) => {
         setRegistrationDetail(res.data);
-      } catch (error) {
+      })
+      .catch((error) => {
         console.log(error);
-      }
-    };
-  if(astrologerPhone){
-
-    fetchAstrologerDetail();
-  }
-  }, [astrologerPhone]);
+      });
+  }, []);
   const handleBusinessProfile = async () => {
     const validationErrors = validateAstrologerForm('astroProfile');
     console.log(validationErrors);

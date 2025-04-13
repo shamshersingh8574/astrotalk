@@ -12,18 +12,15 @@ const UserRecharge = ({ setShowRecharge, astroMobileNum }) => {
   };
 
   useEffect(() => {
-    const fetchAstroBusinessProfile = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/astrologer-businessProfile/${astroMobileNum}`
-        );
-        setAstroData(res.data);
-      } catch (err) {
+    axios.get(
+      `${process.env.NEXT_PUBLIC_WEBSITE_URL}/astrologer-businessProfile/${astroMobileNum}`)
+      .then((res)=>{
+        setAstroData(res.data)
+      })
+      .catch((err)=>{
         console.log(err);
-      }
-    };
-  
-    fetchAstroBusinessProfile();
+      })
+
   }, []);
 
   return (

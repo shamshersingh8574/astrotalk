@@ -1,43 +1,42 @@
 "use client";
-// import { validateAstrologerForm } from "@/app/component/FormValidation";
-// import UserOtpLoginData from "@/app/component/userOtpLoginData";
-// import { useState } from "react";
+import { validateAstrologerForm } from "@/app/component/FormValidation";
+import UserOtpLoginData from "@/app/component/UserOtpLoginData";
+import { useState } from "react";
 
 const StartUserName = () => {
-//   const [dateOfBirthAvailable, setDateOfBirthAvailable] = useState("no");
-//   const [otpPopUpDisplays, setOtpPopUpDisplays] = useState(false);
-//   const [errors, setErrors] = useState({});
-// console.log(errors);
+  const [dateOfBirthAvailable, setDateOfBirthAvailable] = useState("no");
+  const [otpPopUpDisplays, setOtpPopUpDisplays] = useState(false);
+  const [errors, setErrors] = useState({});
+console.log(errors);
 
-//   const handleUserSignUpData = async () => {
-//     const validationErrors = validateAstrologerForm('user');
-//     console.log(validationErrors);
+  const handleUserSignUpData = async () => {
+    const validationErrors = validateAstrologerForm('user');
+    console.log(validationErrors);
     
-//     setErrors(validationErrors);
+    setErrors(validationErrors);
     
-//     if (Object.keys(validationErrors).length > 0) {
-//       return;
-//     }
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
 
-//     const formData = {
-//       first_name: document.getElementById("fname").value.trim(),
-//       gender: document.querySelector('input[name="gender"]:checked')?.value,
-//       date_of_birth: document.getElementById("birthdayany").value.trim(),
-//       re_use_date_of_birth:
-//         document.getElementById("birthdayReUse")?.value.trim() || "",
-//       placeOfBorn: document.getElementById("searchAddress").value.trim(),
-//       languages: document.getElementById("language").value.trim(),
-//     };
-//     if (formData) {
-//       setOtpPopUpDisplays(true);
-//     }
-//   };
+    const formData = {
+      first_name: document.getElementById("fname").value.trim(),
+      gender: document.querySelector('input[name="gender"]:checked')?.value,
+      date_of_birth: document.getElementById("birthdayany").value.trim(),
+      re_use_date_of_birth:
+        document.getElementById("birthdayReUse")?.value.trim() || "",
+      placeOfBorn: document.getElementById("searchAddress").value.trim(),
+      languages: document.getElementById("language").value.trim(),
+    };
+    if (formData) {
+      setOtpPopUpDisplays(true);
+    }
+  };
 
   return (
     <>
       <section className="astrologer-registration-bg">
-      kjjhghhg
-        {/* <div className="container">
+        <div className="container">
           <div className={otpPopUpDisplays == true && `outer-send-otp-main`}>
             {otpPopUpDisplays && (
               <UserOtpLoginData setOtpPopUpDisplay={setOtpPopUpDisplays} />
@@ -224,7 +223,7 @@ const StartUserName = () => {
               </div>
             </div>
           </div>
-        </div> */}
+        </div>
       </section>
     </>
   );

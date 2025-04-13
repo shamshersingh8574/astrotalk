@@ -3,6 +3,7 @@ import { useEffect, useState,useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
+import secureLocalStorage from "react-secure-storage";
 
 
 const socket = io(process.env.NEXT_PUBLIC_WEBSITE_URL, {
@@ -13,28 +14,16 @@ const socket = io(process.env.NEXT_PUBLIC_WEBSITE_URL, {
 
 function EndChat({astrologerData, timeLeft, setTimeLeft}) {
   
+  const totalChatTime = Math.round(secureLocalStorage.getItem("totalChatTime"));
 
   const timeoutRef = useRef(null);
   const intervalRef = useRef(null);
-
-  const [astrologerNotificationStatus, setAstrologerNotificationStatus] =   useState();
-  const [totalChatTime, setTotalChatTime] =   useState();
-  const [astrologerId, setAstrologerId ]=   useState();
-  const [userIds, setUserIds]=   useState();
-
-useEffect(()=>{
-  const totalChatTime = Math.round(localStorage.getItem("totalChatTime"));
-  const astrologerId = localStorage.getItem("astrologerId");
-  const userIds = localStorage.getItem("userIds");
-
-  setTotalChatTime(totalChatTime)
-  setAstrologerId(astrologerId)
-  setUserIds(userIds)
-},[])
-
-
+  const astrologerId = secureLocalStorage.getItem("astrologerId");
+  const userIds = secureLocalStorage.getItem("userIds");
+  const [astrologerNotificationStatus, setAstrologerNotificationStatus] =
+    useState();
   useEffect(() => {
-    let storedNotification = localStorage.getItem(
+    let storedNotification = secureLocalStorage.getItem(
       "AstrologerNotificationStatus"
     );
     if (storedNotification) {
@@ -44,7 +33,7 @@ useEffect(()=>{
 
    setTimeLeft(() => {
     // Initialize timeLeft from localStorage or set to a default value
-    const storedTime = localStorage.getItem("chatTimeLeft");
+    const storedTime = secureLocalStorage.getItem("chatTimeLeft");
     return storedTime
       ? parseInt(storedTime, 10)
       : astrologerNotificationStatus == false
@@ -72,9 +61,9 @@ useEffect(()=>{
           position: "top-right",
         });
 
-        // Update state and localStorage
+        // Update state and secureLocalStorage
         setTimeLeft(null);
-        localStorage.removeItem("chatTimeLeft");
+        secureLocalStorage.removeItem("chatTimeLeft");
 
         const updatedAstrologerData = response.data.updatedProfile;
         socket.emit("astrologer-chat-status", updatedAstrologerData);
@@ -86,8 +75,8 @@ useEffect(()=>{
         socket.emit("chat-timeLeft-update", newUserDetail);
         console.log(newUserDetail);
 
-        // Update AstrologerNotificationStatus in localStorage and state
-        localStorage.setItem(
+        // Update AstrologerNotificationStatus in secureLocalStorage and state
+        secureLocalStorage.setItem(
           "AstrologerNotificationStatus",
           updatedAstrologerData.chatStatus
         );
@@ -116,8 +105,8 @@ useEffect(()=>{
         intervalRef.current = setInterval(() => {
           setTimeLeft((prevTime) => {
             const newTime = prevTime + 1;
-            localStorage.setItem("chatTimeLeft", newTime.toString());
-            localStorage.setItem("totalChatTime", newTime.toString());
+            secureLocalStorage.setItem("chatTimeLeft", newTime.toString());
+            secureLocalStorage.setItem("totalChatTime", newTime.toString());
             return newTime;
           });
         }, 1000);
@@ -130,7 +119,7 @@ useEffect(()=>{
       }, 100);
     } else {
       setTimeLeft(null);
-      localStorage.removeItem("chatTimeLeft");
+      secureLocalStorage.removeItem("chatTimeLeft");
       clearTimeout(timeoutRef.current);
       clearInterval(intervalRef.current);
       const newUserDetail = {

@@ -1,6 +1,7 @@
 import axios from "axios";
+import secureLocalStorage from "react-secure-storage";
 const API_BASE_URL = process.env.NEXT_PUBLIC_WEBSITE_URL;
-const userMobile = Math.round(localStorage.getItem("userMobile"));
+const userMobile = Math.round(secureLocalStorage.getItem("userMobile"));
 
 // Common GET request function
 const getRequest = async (endpoint) => {

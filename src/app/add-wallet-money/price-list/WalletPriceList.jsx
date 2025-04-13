@@ -2,17 +2,12 @@
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import secureLocalStorage from "react-secure-storage";
 
 const WalletPriceList = () => {
   const [denominationList, setDenominationList] = useState([]);
   const [userData, setUserData] = useState();
-  const [userMobile, setUserMobile] = useState();
-
-
-useEffect(()=>{
-  const userMobile = Math.round(localStorage.getItem("userMobile"));
-  setUserMobile(userMobile)
-},[])
+  const userMobile = Math.round(secureLocalStorage.getItem("userMobile"));
 
   useEffect(() => {
     axios
@@ -26,19 +21,17 @@ useEffect(()=>{
   }, []);
 
   useEffect(() => {
-    if (userMobile) {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/user-login-detail/${userMobile}`
-        )
-        .then((res) => {
-          setUserData(res.data);
-        })
-        .catch((err) => {
-          console.log(err, "user login api error");
-        });
-    }
-  }, [userMobile]);
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/user-login-detail/${userMobile}`
+      )
+      .then((res) => {
+        setUserData(res.data);
+      })
+      .catch((err) => {
+        console.log(err, "user login api error");
+      });
+  }, []);
   return (
     <section className="add-money-wallet-bg">
       <div className="container">
@@ -56,10 +49,7 @@ useEffect(()=>{
             return (
               <>
                 <div className="inner-popular-recharge-sec" key={item._id}>
-                  <Link
-                    href={`/add-wallet-money/payment?pmt=${item._id}`}
-                    title="Money "
-                  >
+                  <Link href={`/add-wallet-money/payment?pmt=${item._id}`} title="Money ">
                     <div className="popular-amount">
                       <span>₹ {item.amount}</span>
                     </div>

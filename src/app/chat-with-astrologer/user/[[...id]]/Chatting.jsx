@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRef } from "react";
+import secureLocalStorage from "react-secure-storage";
 
 const socket = io(process.env.NEXT_PUBLIC_WEBSITE_URL, {
   transports: ["websocket"],
@@ -12,7 +13,7 @@ const socket = io(process.env.NEXT_PUBLIC_WEBSITE_URL, {
 });
 
 export default function Chatting() {
-  const totalChatTime = Math.round(localStorage.getItem("totalChatTime"));
+  const totalChatTime = Math.round(secureLocalStorage.getItem("totalChatTime"));
   const [actualChargeUserChat, setActualChargeUserChat] = useState();
   console.log(actualChargeUserChat);
 
@@ -23,9 +24,9 @@ export default function Chatting() {
   const [user, setUser] = useState("");
   const [astrologerData, setAstrologerData] = useState("");
   const [showUserData, setShowUserData] = useState();
-  const astrologerId = localStorage.getItem("astrologerId");
-  const userIds = localStorage.getItem("userIds");
-  const userMobile = Math.round(localStorage.getItem("userMobile"));
+  const astrologerId = secureLocalStorage.getItem("astrologerId");
+  const userIds = secureLocalStorage.getItem("userIds");
+  const userMobile = Math.round(secureLocalStorage.getItem("userMobile"));
   // const [astrologerNotificationStatus, setAstrologerNotificationStatus] =
     useState();
     const [astroMobileUpdate, setAstroMobileUpdate] = useState(null);
@@ -33,14 +34,14 @@ export default function Chatting() {
     const mobileRef = useRef(null);
 
     useEffect(() => {
-      const storedNotification = localStorage.getItem("AstrologerNotificationStatus");
+      const storedNotification = secureLocalStorage.getItem("AstrologerNotificationStatus");
       if (storedNotification) {
         setAstrologerNotificationStatus(storedNotification);
       }
     }, []);
 
   const [timeLeft, setTimeLeft] = useState(() => {
-    const storedTime = localStorage.getItem("chatTimeLeft");
+    const storedTime = secureLocalStorage.getItem("chatTimeLeft");
     if (storedTime) {
       return parseInt(storedTime, 10);
     }
@@ -56,7 +57,7 @@ export default function Chatting() {
       mobileRef.current = astrologerData.mobileNumber;
     }
 
-    const storedNotification = localStorage.getItem("AstrologerNotificationStatus");
+    const storedNotification = secureLocalStorage.getItem("AstrologerNotificationStatus");
     if (storedNotification) {
       setAstrologerNotificationStatus(storedNotification);
     }
@@ -78,7 +79,7 @@ export default function Chatting() {
         // Ensure state actually changes
         setAstrologerNotificationStatus((prevStatus) => {
           if (prevStatus !== newStatus) {
-            localStorage.setItem("AstrologerNotificationStatus", newStatus);
+            secureLocalStorage.setItem("AstrologerNotificationStatus", newStatus);
             return newStatus;
           }
           return prevStatus;
@@ -223,9 +224,9 @@ export default function Chatting() {
           position: "top-right",
         });
 
-        // Update state and localStorage
+        // Update state and secureLocalStorage
         setTimeLeft(null);
-        localStorage.removeItem("chatTimeLeft");
+        secureLocalStorage.removeItem("chatTimeLeft");
 
         const updatedAstrologerData = response.data.updatedProfile;
         socket.emit("astrologer-chat-status", updatedAstrologerData);
@@ -244,8 +245,8 @@ export default function Chatting() {
         socket.emit("chat-timeLeft-update", newUserDetail);
         console.log("newUserDetail=====", newUserDetail);
 
-        // Update AstrologerNotificationStatus in localStorage and state
-        localStorage.setItem(
+        // Update AstrologerNotificationStatus in secureLocalStorage and state
+        secureLocalStorage.setItem(
           "AstrologerNotificationStatus",
           updatedAstrologerData.chatStatus
         );
@@ -274,8 +275,8 @@ export default function Chatting() {
         intervalRef.current = setInterval(() => {
           setTimeLeft((prevTime) => {
             const newTime = prevTime + 1;
-            localStorage.setItem("chatTimeLeft", newTime.toString());
-            localStorage.setItem("totalChatTime", newTime.toString());
+            secureLocalStorage.setItem("chatTimeLeft", newTime.toString());
+            secureLocalStorage.setItem("totalChatTime", newTime.toString());
             return newTime;
           });
         }, 1000);
@@ -288,7 +289,7 @@ export default function Chatting() {
       }, 100);
     } else {
       setTimeLeft(null);
-      localStorage.removeItem("chatTimeLeft");
+      secureLocalStorage.removeItem("chatTimeLeft");
       clearTimeout(timeoutRef.current);
       clearInterval(intervalRef.current);
       const newUserDetail = {

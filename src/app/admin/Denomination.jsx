@@ -4,13 +4,16 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 const Denomination = () => {
-  const [mostPopularData, setMostPopularData] = useState(false);
+const [mostPopularData,setMostPopularData] = useState(false)
+
 
   const handleSubmitAmount = async () => {
     const formData = {
       amount: document.getElementById("amount").value,
       extraAmount: document.getElementById("extra-amount").value,
+      
     };
+
 
     if (!formData.amount || !formData.extraAmount) {
       console.log("Please fill in all fields");
@@ -20,7 +23,7 @@ const Denomination = () => {
       {
         amount: formData.amount,
         extraAmount: formData.extraAmount,
-        mostPopular: mostPopularData,
+        mostPopular: mostPopularData
       }
     );
     if (response.data.message == "success") {
@@ -54,7 +57,7 @@ const Denomination = () => {
           <label>Add popular</label>
           <input
             type="checkbox"
-            onChange={() => setMostPopularData(!mostPopularData)}
+            onChange={()=>setMostPopularData(!mostPopularData)}
             placeholder="enter extra amount"
             id="mostPopular"
           />

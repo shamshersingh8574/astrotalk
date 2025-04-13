@@ -6,19 +6,15 @@ function AstroLogerList() {
     const [pendingData, setPendingData] = useState([]);
   
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-list?astroStatus=true`
-          );
-          setPendingData(response.data);
-        } catch (err) {
-          console.log(err);
-        }
-      };
-    
-      fetchData();
-    }, []);
+      axios
+      .get(`${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-list?astroStatus=true`)
+      .then((response) => {
+          setPendingData(response.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
 
   

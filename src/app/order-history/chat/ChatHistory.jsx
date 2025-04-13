@@ -5,15 +5,13 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { MdDelete } from "react-icons/md";
+import secureLocalStorage from "react-secure-storage";
 
 const ChatHistory = () => {
+  const userIds = secureLocalStorage.getItem("userIds");
   const [astroMessageList, setAstroMessageList] = useState([]);
-  const [userIds, setUserIds] = useState();
 
-useEffect(()=>{
-  const userIds = localStorage.getItem("userIds");
-  setUserIds(userIds)
-},[])
+
   const deleteOrderHistory = async (id) => {
     try {
       await axios.put(
@@ -105,7 +103,7 @@ useEffect(()=>{
                       {item?.DeleteOrderHistoryStatus == true && (
                         <div className="inner-ctm-chat-with-astrologer">
                           <div className="inner-ctm-chat-with-astrologer-top">
-                            <a href={`/chat-with-astrologer/user/${item?.userIdToAst}`} onClick={localStorage.setItem("astrologerId",item?.astrologerIdToAst)}>
+                            <a href={`/chat-with-astrologer/user/${item?.userIdToAst}`} onClick={secureLocalStorage.setItem("astrologerId",item?.astrologerIdToAst)}>
                               <div className="order-id-sec">
                                 <ul>
                                   <li>

@@ -3,6 +3,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import secureLocalStorage from "react-secure-storage";
 import io from "socket.io-client";
 
 // Initialize socket connection
@@ -19,9 +20,9 @@ const AstroNotification = ({ astrologerPhone }) => {
 
   const matchAstrologerMobile = astrologerPhone === updateNotification?.mobileNumber;
 
-  // Fetch and set initial notification data from localStorage
+  // Fetch and set initial notification data from secureLocalStorage
   useEffect(() => {
-    const storedNotification = localStorage.getItem("new-notification");
+    const storedNotification = secureLocalStorage.getItem("new-notification");
     if (storedNotification) {
       setUpdateNotification(JSON.parse(storedNotification));
     }
@@ -38,7 +39,7 @@ const AstroNotification = ({ astrologerPhone }) => {
 
       // Ensure the notification is for the correct astrologer
       if (data?.mobileNumber && astrologerPhone === data.mobileNumber) {
-        localStorage.setItem("new-notification", JSON.stringify(data));
+        secureLocalStorage.setItem("new-notification", JSON.stringify(data));
         setUpdateNotification(data);
       } else {
         console.warn("Notification data does not match astrologer phone number");
@@ -54,8 +55,8 @@ const AstroNotification = ({ astrologerPhone }) => {
   // Handle the update and status change of the astrologer
   const onChangeId = async (astrologerId, userId) => {
     setLoading(true);
-    localStorage.setItem("userIds", userId);
-    localStorage.setItem("astrologerId", astrologerId);
+    secureLocalStorage.setItem("userIds", userId);
+    secureLocalStorage.setItem("astrologerId", astrologerId);
 
     try {
       const response = await axios.put(
@@ -68,10 +69,10 @@ const AstroNotification = ({ astrologerPhone }) => {
         socket.emit("astrologer-chat-status", astrologerData);
 
         setUpdateNotification(null);
-        localStorage.removeItem("new-notification");
+        secureLocalStorage.removeItem("new-notification");
 
         if (astrologerData.mobileNumber === astrologerPhone) {
-          localStorage.setItem("AstrologerNotificationStatus", astrologerData.chatStatus);
+          secureLocalStorage.setItem("AstrologerNotificationStatus", astrologerData.chatStatus);
         }
       }
     } catch (error) {
@@ -81,9 +82,9 @@ const AstroNotification = ({ astrologerPhone }) => {
     }
   };
 
-  // Clear notification data from localStorage
+  // Clear notification data from secureLocalStorage
   const UpdateRemoveData = () => {
-    localStorage.removeItem("new-notification");
+    secureLocalStorage.removeItem("new-notification");
     setUpdateNotification(null);
   };
 

@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import secureLocalStorage from "react-secure-storage";
 
 const OtpData = ({ setOtpPopUpDisplayAstro, otpPopUpDisplayAstro }) => {
   const router = useRouter();
@@ -10,22 +11,20 @@ const OtpData = ({ setOtpPopUpDisplayAstro, otpPopUpDisplayAstro }) => {
   const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const [timeOtpMessage, setTimeOtpMessage] = useState("");
-  // const localAstroMobile = localStorage.getItem("astrologer-phone");
+  const localAstroMobile = secureLocalStorage.getItem("astrologer-phone");
   const [pendingData, setPendingData] = useState([]);
 
   useEffect(() => {
-    const fetchPendingAstrologers = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-list?astroStatus=true`
-        );
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-list?astroStatus=true`
+      )
+      .then((response) => {
         setPendingData(response.data);
-      } catch (err) {
+      })
+      .catch((err) => {
         console.log(err);
-      }
-    };
-  
-    fetchPendingAstrologers();
+      });
   }, []);
 
   const sendOtp = async () => {
@@ -77,7 +76,7 @@ const OtpData = ({ setOtpPopUpDisplayAstro, otpPopUpDisplayAstro }) => {
         router.push("/astrologer-dashboard");
         setOtpPopUpDisplayAstro(false);
         setOtpSent(false);
-        localStorage.setItem("astrologer-phone", phone);
+        secureLocalStorage.setItem("astrologer-phone", phone);
         try {
           const response = await axios.put(
             `${process.env.NEXT_PUBLIC_WEBSITE_URL}/update-astro-status-by-mobile/${phone}`,

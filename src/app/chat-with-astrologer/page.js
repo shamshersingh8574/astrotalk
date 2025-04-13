@@ -5,25 +5,17 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import UserRecharge from "../component/UserRechargePopUp";
 import Link from "next/link";
+import secureLocalStorage from "react-secure-storage";
 const socket = io(`${process.env.NEXT_PUBLIC_WEBSITE_URL}`);
 
 const ChatWithAstrologer = () => {
   const [showAstrologer, setShowAstrologer] = useState();
+  const userIds = secureLocalStorage.getItem("userIds");
+  const userMobile = Math.round(secureLocalStorage.getItem("userMobile"));
   const [showRecharge, setShowRecharge] = useState(false);
   const [userData, setUserData] = useState();
   const [astroMobileNum, setAstroMobileNum] = useState();
-  const [userIds, setUserIds] = useState();
-  const [userMobile, setUserMobile] = useState();
-
   const router = useRouter();
-
-useEffect(()=>{
-  const userIds = localStorage.getItem("userIds");
-  const userMobile = Math.round(localStorage.getItem("userMobile"));
-  setUserIds(userIds)
-  setUserMobile(userMobile)
-},[])
-
 
   const fetchData = () => {
     axios
@@ -40,20 +32,19 @@ useEffect(()=>{
   }, [userData]);
 
   useEffect(() => {
-    const fetchUserLoginDetail = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/user-login-detail/${userMobile}`
-        );
+    if(userMobile){
+      axios
+      .get(
+        `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/user-login-detail/${userMobile}`
+      )
+      .then((res) => {
         setUserData(res.data);
-      } catch (err) {
+      })
+      .catch((err) => {
         console.log(err, "user login api error");
-      }
-    };
-  if(userMobile){
-
-    fetchUserLoginDetail();
-  }
+      });
+    }
+    
   }, [userMobile]);
 
   useEffect(() => {
@@ -80,7 +71,7 @@ useEffect(()=>{
         // await router.push(`/chat-with-astrologer/user/${userIds}`);
 
         // This code will run after the navigation is complete
-        localStorage.setItem("astrologerId", astrologerId);
+        secureLocalStorage.setItem("astrologerId", astrologerId);
 
         const messageId = {
           userIdToAst: userIds,
@@ -97,7 +88,6 @@ useEffect(()=>{
           DeleteOrderHistoryStatus: true, 
           chatStatus: true,
         };
-console.log(messageId);
 
         socket.emit("userId-to-astrologer", messageId);
       } catch (error) {

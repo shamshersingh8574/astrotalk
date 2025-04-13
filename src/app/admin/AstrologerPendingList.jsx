@@ -7,18 +7,16 @@ function AstrologerPendingList() {
   const [updateData, setUpdateData] = useState();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-list?astroStatus=false`
-        );
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/astrologer-list?astroStatus=false`
+      )
+      .then((response) => {
         setPendingData(response.data);
-      } catch (err) {
+      })
+      .catch((err) => {
         console.log(err);
-      }
-    };
-
-    fetchData();
+      });
   }, [updateData]);
 
   const updateAstrologerStatus = async (id, newStatus) => {

@@ -6,8 +6,8 @@ import AstroNotification from "../component/AstroNotification";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import UserOtpLoginData from "../component/userOtpLoginData";
 import secureLocalStorage from "react-secure-storage";
+import UserOtpLoginData from "../component/UserOtpLoginData";
 
 const Header = () => {
   const router = useRouter();
@@ -18,6 +18,7 @@ const Header = () => {
 
 // console.log(astrologerPhone,astroDetailData);
   const [userMobile, setUserMobile] = useState();
+  console.log(userDetailData,userMobile);
 
   const astrologerPhone = secureLocalStorage.getItem("astrologer-phone");
 //   useEffect(()=>{
@@ -26,7 +27,7 @@ const Header = () => {
 
   useEffect(() => {
     const fetchUserMobile = () => {
-      const storedUserMob = localStorage.getItem("userMobile");
+      const storedUserMob = secureLocalStorage.getItem("userMobile");
       setUserMobile(storedUserMob);
     };
 
@@ -83,10 +84,10 @@ if(userMobile){
 
   const userLogout = () => {
     window.dispatchEvent(new Event(""));
-    localStorage.removeItem("userIds");
-    localStorage.removeItem("userMobile");
-    localStorage.removeItem("astrologerId");
-    localStorage.removeItem("AstrologerNotificationStatus");
+    secureLocalStorage.removeItem("userIds");
+    secureLocalStorage.removeItem("userMobile");
+    secureLocalStorage.removeItem("astrologerId");
+    secureLocalStorage.removeItem("AstrologerNotificationStatus");
     setUserMobile(null);
   };
 
@@ -99,7 +100,7 @@ if(userMobile){
         }
       );
       if (response.data.message == "Success") {
-        localStorage.removeItem("astrologer-phone");
+        secureLocalStorage.removeItem("astrologer-phone");
         setTimeout(() => {
           window.location.reload();
         }, 2000);
