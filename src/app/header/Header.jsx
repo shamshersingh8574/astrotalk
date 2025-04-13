@@ -6,8 +6,8 @@ import AstroNotification from "../component/AstroNotification";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import UserOtpLoginData from "../component/userOtpLoginData";
 import secureLocalStorage from "react-secure-storage";
-// import UserOtpLoginData from "../component/UserOtpLoginData";
 
 const Header = () => {
   const router = useRouter();
@@ -16,19 +16,14 @@ const Header = () => {
   const [userDetailData, setUserDetailData] = useState();
   const [astroDetailData, setAstroDetailData] = useState();
 
+// console.log(astrologerPhone,astroDetailData);
+  const [userMobile, setUserMobile] = useState();
 
-  const [userMobile, setUserMobile] = useState(null);
-
-  // const [astrologerPhone, setAstrologerPhone] = useState();
-
-  //   const  process.env.NEXT_PUBLIC_WEBSITE_URL  = useContext(UserContext);
-  // console.log(process.env.NEXT_PUBLIC_WEBSITE_URL);
   const astrologerPhone = secureLocalStorage.getItem("astrologer-phone");
-  
-  // useEffect(() => {
-  //     const astrologerPhone = localStorage.getItem("astrologer-phone");
-  //     setAstrologerPhone(astrologerPhone);
-  //   }, []);
+//   useEffect(()=>{
+//   setAstrologerPhone(astrologerPhone)
+// },[])
+
   useEffect(() => {
     const fetchUserMobile = () => {
       const storedUserMob = localStorage.getItem("userMobile");
@@ -44,30 +39,41 @@ const Header = () => {
       window.removeEventListener("storageUserMobile", fetchUserMobile);
     };
   }, []);
-  useEffect(() => {
-    axios
-      .get(
+
+useEffect(() => {
+  const fetchAstroDetailData = async () => {
+    try {
+      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_WEBSITE_URL}/astrologer-businessProfile/${Math.round(astrologerPhone)}`
-      )
-      .then((response) => {
-        setAstroDetailData(response?.data);
-      })
-      .catch((error) => {
-        console.log(error, "user detail api error");
-      });
-  }, [userMobile]);
-  useEffect(() => {
-    axios
-      .get(
+      );
+      setAstroDetailData(response?.data);
+    } catch (error) {
+      console.log(error, "user detail api error");
+    }
+  };
+
+  if(astrologerPhone){
+
+    fetchAstroDetailData();
+  }
+}, [astrologerPhone]);
+
+useEffect(() => {
+  const fetchUserDetailData = async () => {
+    try {
+      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_WEBSITE_URL}/auth/user-login-detail/${Math.round(userMobile)}`
-      )
-      .then((response) => {
-        setUserDetailData(response?.data);
-      })
-      .catch((error) => {
-        console.log(error, "user detail api error");
-      });
-  }, [userMobile]);
+      );
+      setUserDetailData(response?.data);
+    } catch (error) {
+      console.log(error, "user detail api error");
+    }
+  };
+if(userMobile){
+
+  fetchUserDetailData();
+}
+}, [userMobile]);
 
   const handleOtpPop = () => {
     if (!astrologerPhone) {
@@ -112,11 +118,11 @@ const Header = () => {
   };
   return (
     <header className="wedding-header">
-      {/* <div className={otpPopUpDisplay == true && `outer-send-otp-main`}>
+      <div className={otpPopUpDisplay == true && `outer-send-otp-main`}>
         {otpPopUpDisplay && (
           <UserOtpLoginData setOtpPopUpDisplay={setOtpPopUpDisplay} />
         )}
-      </div> */}
+      </div>
       <div className="container">
         <div className="inner-header-sec ctm-flex-row ctm-align-items-center ctm-justify-content-between">
           <div className="header-left-logo">
@@ -172,7 +178,6 @@ const Header = () => {
           {astrologerPhone && (
             <>
               <IoMdNotificationsOutline />
-
               <AstroNotification astrologerPhone={astrologerPhone}/>
             </>
           )}
