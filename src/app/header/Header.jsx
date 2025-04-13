@@ -134,7 +134,7 @@ if(userMobile){
               <img src="/astrotalk-logo.webp" alt="WeddingByte" />
             </Link>
           </div>
-          {!astrologerPhone && (
+          {/* {!astrologerPhone && (
             <nav className="navbar">
               <ul>
                 <li>
@@ -175,15 +175,15 @@ if(userMobile){
                 </li>
               </ul>
             </nav>
-          )}
+          )} */}
           {astrologerPhone && (
             <>
-              <IoMdNotificationsOutline />
+              {/* <IoMdNotificationsOutline /> */}
               <AstroNotification astrologerPhone={astrologerPhone}/>
             </>
           )}
 
-          {astrologerPhone || userMobile ? (
+          {/* {astrologerPhone || userMobile ? (
             <div className="header-right-profil-icon">
               <div className="user-dashboard-profile ctm-text-end">
                 <div className="user-dashboard-profile-main-pro">
@@ -249,7 +249,7 @@ if(userMobile){
             </div>
           ) : (
             <button onClick={handelUserLogin}>User Login</button>
-          )}
+          )} */}
         </div>
       </div>
     </header>
