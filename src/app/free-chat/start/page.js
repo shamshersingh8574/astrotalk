@@ -1,7 +1,7 @@
 "use client";
-import { validateAstrologerForm } from "@/app/component/FormValidation";
-import UserOtpLoginData from "@/app/component/userOtpLoginData";
-import { useState } from "react";
+// import { validateAstrologerForm } from "@/app/component/FormValidation";
+// import UserOtpLoginData from "@/app/component/userOtpLoginData";
+// import { useState } from "react";
 
 const StartUserName = () => {
 //   const [dateOfBirthAvailable, setDateOfBirthAvailable] = useState("no");
