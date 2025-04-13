@@ -6,6 +6,7 @@ import AstroNotification from "../component/AstroNotification";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import secureLocalStorage from "react-secure-storage";
 // import UserOtpLoginData from "../component/UserOtpLoginData";
 
 const Header = () => {
@@ -18,15 +19,16 @@ const Header = () => {
 
   const [userMobile, setUserMobile] = useState(null);
 
-  const [astrologerPhone, setAstrologerPhone] = useState();
+  // const [astrologerPhone, setAstrologerPhone] = useState();
 
   //   const  process.env.NEXT_PUBLIC_WEBSITE_URL  = useContext(UserContext);
   // console.log(process.env.NEXT_PUBLIC_WEBSITE_URL);
+  const astrologerPhone = secureLocalStorage.getItem("astrologer-phone");
   
-  useEffect(() => {
-      const astrologerPhone = localStorage.getItem("astrologer-phone");
-      setAstrologerPhone(astrologerPhone);
-    }, []);
+  // useEffect(() => {
+  //     const astrologerPhone = localStorage.getItem("astrologer-phone");
+  //     setAstrologerPhone(astrologerPhone);
+  //   }, []);
   useEffect(() => {
     const fetchUserMobile = () => {
       const storedUserMob = localStorage.getItem("userMobile");
