@@ -2,13 +2,14 @@
 
 
 
-// const MyWalletServer = async () => {
+const MyWalletServer = async () => {
 
-//   return (
-//     <>
-//       <MyWalletHome />
-//     </>
-//   );
-// };
+  return (
+    <>
+      {/* <MyWalletHome /> */}
+      jgjhghjghg
+    </>
+  );
+};
 
-// export default MyWalletServer;
+export default MyWalletServer;
