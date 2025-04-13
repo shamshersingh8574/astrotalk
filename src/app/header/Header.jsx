@@ -18,15 +18,15 @@ const Header = () => {
 
   const [userMobile, setUserMobile] = useState(null);
 
-  const [astrologerPhone, setAstrologerPhone] = useState();
+  // const [astrologerPhone, setAstrologerPhone] = useState();
 
   //   const  process.env.NEXT_PUBLIC_WEBSITE_URL  = useContext(UserContext);
   // console.log(process.env.NEXT_PUBLIC_WEBSITE_URL);
   
-    useEffect(() => {
-      const astrologerPhone = localStorage.getItem("astrologer-phone");
-      setAstrologerPhone(astrologerPhone);
-    }, []);
+  const astrologerPhone = localStorage.getItem("astrologer-phone");
+    // useEffect(() => {
+    //   setAstrologerPhone(astrologerPhone);
+    // }, []);
   useEffect(() => {
     const fetchUserMobile = () => {
       const storedUserMob = localStorage.getItem("userMobile");
